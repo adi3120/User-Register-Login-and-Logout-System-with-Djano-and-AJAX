@@ -1,0 +1,102 @@
+{%load static%} {% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Login Logout</title>
+    <link rel="stylesheet" href="{% static 'ajaxloginapp/css/bootstrap.css' %}">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2 class='text-center alert alert-danger'>
+            Django - Register Login Logout with AJAX
+        </h2>
+        <div class="row">
+            <div class="col-sm-6">
+                <h4 class="text-center alert-info">Register User</h4>
+                <form id="regform" action="" method="post">
+                    {%csrf_token%}
+                    <label for="id_reg_username">Username:</label> <input type="text" name="username" maxlength="150" autofocus required id="id_reg_username"> <br><br>
+                    <label for="id_reg_password1">Password:</label> <input type="password" name="password1" autocomplete="new-password" required id="id_reg_password1"> <br><br> <label for="id_reg_password2">Password confirmation:</label> <input type="password"
+                        name="password2" autocomplete="new-password" required id="id_reg_password2"> <br><br>
+                    <input id='btnreg' class='btn btn-success' type="button" value="Register">
+                </form>
+                <!-- <form id="regform" action="" method="post">
+                    {%csrf_token%} {%for fm in form%} {{fm.label_tag}} {{fm}} {{fm.errors|striptags}} <br><br>{%endfor%}
+                    <input id='btnreg' class='btn btn-success' type="button" value="register">
+                </form> -->
+
+                <h5 id="msgbox">
+                    {%if messages%} {%for message in messages%}
+                    <small {%if message.tags %} class="{{message.tags}}" {%endif%}>{{message}}</small> <br><br>{%endfor%} {%endif%}
+                </h5>
+
+            </div>
+            <div class="col-sm-6">
+                <h4 class="text-center alert alert-info">
+                    User Login
+                </h4>
+                <form id="loginform" action="" method="post">
+                    {%csrf_token%} {%for fm in loginform%} {{fm.label_tag}} {{fm}} {{fm.errors|striptags}} <br><br>{%endfor%}
+                    <input id='btnlogin' class='btn btn-success' type="button" value="Login">
+                </form>
+
+
+            </div>
+            <div class="col-sm-6">
+                <h4 class="text-center alert alert-info">
+                    All Registered Users
+                </h4>
+                <table id="regtab" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Username</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        {% for user in allusers%}
+                        <tr>
+                            <td>{{user.username}}</td>
+                            <td><input type="button" data-uid="{{user.id}}" id="btn-del" class="btn btn-danger btn-sm" value="Delete"></td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+                <form action="" method="post">
+                    {%csrf_token%}
+                </form>
+            </div>
+            <div class="col-sm-6">
+                <h4 class="text-center alert alert-info">
+                    Logged in User's Profile
+                </h4>
+
+                <h2 id="getname1">
+                    No user logged in
+                </h2>
+                <h2 style="color:blue;" id="getname2">
+                </h2>
+                <h2 id="getname3">
+                </h2>
+
+                <a class="btn btn-success" href="{%url 'ajaxloginapp:user_logout' %}">Logout</a>
+
+
+            </div>
+
+        </div><br><br>
+        <h3 class="text-center">Made with ❤️ by Aditya Yadav</h3>
+    </div>
+    <script src="{% static 'ajaxloginapp/js/jquery.js' %}"></script>
+    <script src="{% static 'ajaxloginapp/js/popper.js' %}"></script>
+    <script src="{% static 'ajaxloginapp/js/bootstrap.js' %}"></script>
+
+    {%include "ajaxloginapp/ajax.html" %}
+</body>
+
+</html>

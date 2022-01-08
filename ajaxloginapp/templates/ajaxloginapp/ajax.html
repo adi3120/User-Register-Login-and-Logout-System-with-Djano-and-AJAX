@@ -1,0 +1,82 @@
+<script>
+    $('#btnreg').click(function() {
+        console.log("Register button clicked");
+        output = "";
+        $.ajax({
+            url: "{%url 'ajaxloginapp:user_register' %}",
+            method: "POST",
+            data: $('#regform').serialize(),
+
+            success: function(json) {
+
+
+                $("form")[0].reset();
+                x = json.allusers;
+
+                for (i = 0; i < x.length; i++) {
+                    output += "<tr><td>" + x[i].username + "</td>";
+                    output += ` <td><input type='button' data-sid=${x[i].id} id="btn-del" class='btn btn-danger btn-sm' value='Delete'></td></tr>`;
+                }
+                $("#tbody").html(output);
+                $("#stuid").val('');
+                $("form")[0].reset();
+            },
+        });
+
+    });
+
+
+    $('#btnlogin').click(function() {
+        console.log("login button clicked");
+        output1 = "";
+        output2 = "";
+        output3 = "";
+        $.ajax({
+            url: "{%url 'ajaxloginapp:user_login' %}",
+            method: "POST",
+            data: $('#loginform').serialize(),
+
+            success: function(json) {
+                console.log(json.userdetails);
+                userInfo = json.userdetails;
+                output1 = "Welcome ";
+                output2 = userInfo;
+                output3 = " to profile page";
+
+                $('#getname1').html(output1);
+                $('#getname2').html(output2);
+                $('#getname3').html(output3);
+            }
+        })
+
+    })
+
+    $("#tbody").on('click', '#btn-del', function() {
+        console.log("delete clicked");
+        let id = $(this).attr("data-uid");
+        let csr = $("input[name=csrfmiddlewaretoken]").val();
+
+        console.log(id);
+        mydata = {
+            uid: id,
+            csrfmiddlewaretoken: csr,
+
+        }
+        mythis = this;
+        $.ajax({
+            url: "{%url 'ajaxloginapp:user_delete' %}",
+            method: "POST",
+            data: mydata,
+
+            success: function(data) {
+                // console.log(data);
+                if (data.status == 1) {
+                    console.log("data deleted successfully");
+                    $(mythis).closest("tr").fadeOut();
+                } else if (data.status == 0) {
+                    console.error("Unable to delete data");
+                }
+            }
+        })
+    })
+</script>
